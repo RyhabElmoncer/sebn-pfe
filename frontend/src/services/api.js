@@ -1,0 +1,13 @@
+import axios from 'axios';
+const API=axios.create({baseURL:'http://localhost:8080/api',headers:{'Content-Type':'application/json'}});
+API.interceptors.request.use(c=>{const t=localStorage.getItem('sebn_token');if(t)c.headers.Authorization=`Bearer ${t}`;return c;});
+export const authAPI={login:d=>API.post('/auth/login',d),register:d=>API.post('/auth/register',d)};
+export const userAPI={getAll:()=>API.get('/users'),getById:id=>API.get(`/users/${id}`),create:d=>API.post('/users',d),update:(id,d)=>API.put(`/users/${id}`,d),delete:id=>API.delete(`/users/${id}`)};
+export const roleAPI={getAll:()=>API.get('/roles'),create:d=>API.post('/roles',d),update:(id,d)=>API.put(`/roles/${id}`,d),delete:id=>API.delete(`/roles/${id}`)};
+export const formationAPI={getAll:()=>API.get('/formations'),getById:id=>API.get(`/formations/${id}`),create:d=>API.post('/formations',d),update:(id,d)=>API.put(`/formations/${id}`,d),delete:id=>API.delete(`/formations/${id}`)};
+export const dossierAPI={getAll:()=>API.get('/dossiers'),getByFormation:fid=>API.get(`/dossiers/formation/${fid}`),create:d=>API.post('/dossiers',d),update:(id,d)=>API.put(`/dossiers/${id}`,d),delete:id=>API.delete(`/dossiers/${id}`)};
+export const inscriptionAPI={getAll:()=>API.get('/inscriptions'),getByFormation:fid=>API.get(`/inscriptions/formation/${fid}`),getByEmploye:eid=>API.get(`/inscriptions/employe/${eid}`),inscrire:(employeId,formationId)=>API.post('/inscriptions',{employeId,formationId}),delete:id=>API.delete(`/inscriptions/${id}`)};
+export const sessionAPI={getByFormation:fid=>API.get(`/sessions/formation/${fid}`),create:d=>API.post('/sessions',d),update:(id,d)=>API.put(`/sessions/${id}`,d),delete:id=>API.delete(`/sessions/${id}`)};
+export const presenceAPI={getBySession:sid=>API.get(`/presences/session/${sid}`),getByEmploye:eid=>API.get(`/presences/employe/${eid}`),getTaux:(eid,fid)=>API.get(`/presences/taux/${eid}/${fid}`),marquer:d=>API.post('/presences/marquer',d)};
+export const certificatAPI={getAll:()=>API.get('/certificats'),getByEmploye:eid=>API.get(`/certificats/employe/${eid}`),getByFormation:fid=>API.get(`/certificats/formation/${fid}`),generer:(employeId,formationId)=>API.post('/certificats/generer',{employeId,formationId})};
+export default API;
